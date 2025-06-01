@@ -267,3 +267,53 @@ RayHit GridTree::cast(SDL_FPoint origin, float angle) const {
     // Exits the grid tree without hitting anything
     return RayHit{.hit = false, .locus = SDL_FPoint{x, y}};
 }
+
+std::string GridTree::graphviz() const {
+    int i = 0;
+    return "digraph QuadTree {\n"
+           "\tnode [shape=circle, style=filled, fontname=\"Helvetica\"];\n"
+           "\n"
+           "\tnode0 [label=\"Root\", fillcolor=\"black\", fontcolor=\"white\"];\n" +
+           this->graphviz(i) + "}\n";
+}
+
+std::string GridTree::graphviz(int& i) const {
+    int parent = i;
+    std::string parent_str = std::to_string(parent);
+    std::string out;
+
+#define PRINT_QUADRANT(X, Y, NAME)                                                           \
+    {                                                                                        \
+        i++;                                                                                 \
+        GridTree* quadrant = this->quadrants[mapQuadrantIndex(X, Y)];                        \
+                                                                                             \
+        std::string fill = "000000FF";                                                       \
+        std::string font = "red";                                                            \
+        if (quadrant) {                                                                      \
+            fill = "000000FF";                                                               \
+            font = "white";                                                                  \
+                                                                                             \
+            if (quadrant->isLeaf()) {                                                        \
+                fill = toColorHex(quadrant->color);                                          \
+                font = "black";                                                              \
+            }                                                                                \
+        }                                                                                    \
+                                                                                             \
+        out += "\tnode" + std::to_string(i) + " [label=\"" NAME "\", fillcolor=\"#" + fill + \
+               "\", fontcolor=\"" + font + "\"];\n";                                         \
+        out += "\tnode" + parent_str + " -> node" + std::to_string(i) + ";\n";               \
+                                                                                             \
+        if (quadrant) {                                                                      \
+            out += quadrant->graphviz(i);                                                    \
+        }                                                                                    \
+    }
+
+    if (!this->isLeaf()) {
+        PRINT_QUADRANT(true, true, "X+ Y+");
+        PRINT_QUADRANT(false, true, "X- Y+");
+        PRINT_QUADRANT(false, false, "X- Y-");
+        PRINT_QUADRANT(true, false, "X+ Y-");
+    }
+
+    return out;
+}

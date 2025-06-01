@@ -1,6 +1,9 @@
 #pragma once
 
 #include <cmath>
+#include <string>
+
+#include <SDL3/SDL.h>
 
 
 const float EPSILON = 0.0001f;
@@ -71,4 +74,29 @@ static inline size_t nextPowerOfTwo(size_t x) {
     x++;
 
     return x;
+}
+
+static inline char toHex(uint8_t n) {
+    if (n < 10) {
+        return '0' + n;
+    }
+    else if (n < 16) {
+        return 'A' + (n - 10);
+    }
+    else {
+        return 'X';
+    }
+}
+
+static inline std::string toColorHex(const SDL_Color& color) {
+    std::string hex(8, 'X');
+    hex[0] = toHex(color.r / 16);
+    hex[1] = toHex(color.r % 16);
+    hex[2] = toHex(color.g / 16);
+    hex[3] = toHex(color.g % 16);
+    hex[4] = toHex(color.b / 16);
+    hex[5] = toHex(color.b % 16);
+    hex[6] = toHex(color.a / 16);
+    hex[7] = toHex(color.a % 16);
+    return hex;
 }

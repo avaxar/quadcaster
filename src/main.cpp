@@ -3,7 +3,6 @@
 #include <SDL3/SDL_main.h>
 
 #include <iostream>
-#include <string>
 
 #include "grid_map.hpp"
 #include "grid_tree.hpp"
@@ -45,10 +44,11 @@ SDL_AppResult SDL_AppInit(void** app_state, int argc, char** argv) {
     // Loads map
     map = GridMap(argc >= 2 ? argv[1] : "maps/a.txt");
     grid = map.treeify();
+    std::cout << grid.graphviz();
 
     // Adjusts wall height and player speed according to the map size
     camera.wall = map.width > map.height ? 2.0 / map.width : 2.0 / map.height;
-    camera.speed = camera.wall;
+    camera.speed = camera.wall * 2.0;
 
     return SDL_APP_CONTINUE;
 }

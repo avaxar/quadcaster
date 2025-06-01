@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <SDL3/SDL.h>
 
 
@@ -42,4 +44,8 @@ public:
 
     void cull();
     RayHit cast(SDL_FPoint origin, float angle) const;
+    std::string graphviz() const;
+
+private:
+    std::string graphviz(int& i) const;
 };
