@@ -156,8 +156,11 @@ RayHit GridTree::cast(SDL_FPoint origin, float angle) const {
     if (this->isLeaf()) {
         SDL_Color color = this->color;
 
-        // Ambient shading
-        if (x <= -1.0 + EPSILON * 64.0 || 1.0 - EPSILON * 64.0 <= x) {
+        bool isAtRight = x + y > 0 && x - y > 0;
+        bool isAtLeft = x + y < 0 && x - y < 0;
+
+        // Ambient shading for the sides facing X+ and X-
+        if (isAtRight || isAtLeft) {
             color.r = (uint8_t)(color.r * 0.95);
             color.g = (uint8_t)(color.g * 0.95);
             // Blue is left untouched for a colder color.

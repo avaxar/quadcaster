@@ -9,7 +9,7 @@ GridMap::GridMap(const std::string& file_name) {
     // Loads file
     std::ifstream fstr(file_name);
     if (!fstr.is_open()) {
-        std::cerr << "Failed to open `" << file_name << "`\n";
+        std::cerr << "Failed to open map file `" << file_name << "`!\n";
         return;
     }
 

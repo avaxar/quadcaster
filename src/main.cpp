@@ -3,6 +3,7 @@
 #include <SDL3/SDL_main.h>
 
 #include <iostream>
+#include <string>
 
 #include "grid_map.hpp"
 #include "grid_tree.hpp"
@@ -17,7 +18,7 @@ GridMap map;
 GridTree grid;
 struct {
     SDL_FPoint pos = {0.0, 0.0};
-    float angle = 0.0;
+    float angle = 0.0; // In radians
 
     float wall;
     float fov = M_PI_2; // 90 degrees
@@ -27,16 +28,18 @@ struct {
 } camera;
 
 SDL_AppResult SDL_AppInit(void** app_state, int argc, char** argv) {
+    // Initializes SDL along with a window
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr << "Unable to initialize SDL: " << SDL_GetError() << '\n';
         return SDL_APP_FAILURE;
     }
-
     if (!SDL_CreateWindowAndRenderer("Quadcaster", 800, 600, SDL_WINDOW_RESIZABLE, &window,
                                      &renderer)) {
         std::cerr << "Unable to create window/renderer: " << SDL_GetError() << '\n';
         return SDL_APP_FAILURE;
     }
+
+    // Enables v-sync
     SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE);
 
     // Loads map
@@ -58,12 +61,12 @@ SDL_AppResult SDL_AppIterate(void* app_state) {
     float deltaTime = (float)SDL_GetPerformanceCounter() / SDL_GetPerformanceFrequency() - lastFrame;
     lastFrame += deltaTime;
 
-    SDL_SetWindowTitle(window, ("Quadcaster (x: " + std::to_string(camera.pos.x) +
-                                ", y: " + std::to_string(camera.pos.y) +
-                                ", angle: " + std::to_string((int)(camera.angle / M_PI * 180.0)) +
-                                ", fov: " + std::to_string((int)(camera.fov / M_PI * 180.0)) + ") at " +
-                                std::to_string((int)(1.0 / deltaTime)) + " FPS")
-                                   .c_str());
+    std::string title = "Quadcaster (x: " + std::to_string(camera.pos.x) +
+                        ", y: " + std::to_string(camera.pos.y) +
+                        ", angle: " + std::to_string((int)(camera.angle / M_PI * 180.0)) +
+                        ", fov: " + std::to_string((int)(camera.fov / M_PI * 180.0)) + ") at " +
+                        std::to_string((int)(1.0 / deltaTime)) + " FPS";
+    SDL_SetWindowTitle(window, title.c_str());
 
     /****★*************/
     /* Input handling */
@@ -109,7 +112,7 @@ SDL_AppResult SDL_AppIterate(void* app_state) {
     float midpoint = height / 2.0;
 
     // Sky color
-    SDL_SetRenderDrawColor(renderer, 64, 192, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 128, 224, 255, 255);
     SDL_FRect skyRect = {.x = 0, .y = 0, .w = (float)width, .h = midpoint};
     SDL_RenderFillRect(renderer, &skyRect);
 
@@ -155,11 +158,11 @@ SDL_AppResult SDL_AppEvent(void* app_state, SDL_Event* event) {
             // Handles FOV changes
             switch (event->key.scancode) {
                 case SDL_SCANCODE_UP:
-                    camera.fov -= M_PI / 16.0;
+                    camera.fov -= M_PI / 180.0 * 5.0;
                     break;
 
                 case SDL_SCANCODE_DOWN:
-                    camera.fov += M_PI / 16.0;
+                    camera.fov += M_PI / 180.0 * 5.0;
                     break;
 
                 default:
