@@ -11,7 +11,7 @@
 
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
-float lastFrame = 0.0;
+double lastFrame = 0.0;
 
 GridMap map;
 GridTree grid;
@@ -58,7 +58,7 @@ SDL_AppResult SDL_AppIterate(void* app_state) {
     /* Diagnostics */
     /****★**********/
 
-    float deltaTime = (float)SDL_GetPerformanceCounter() / SDL_GetPerformanceFrequency() - lastFrame;
+    double deltaTime = (double)SDL_GetPerformanceCounter() / SDL_GetPerformanceFrequency() - lastFrame;
     lastFrame += deltaTime;
 
     std::string title = "Quadcaster (x: " + std::to_string(camera.pos.x) +

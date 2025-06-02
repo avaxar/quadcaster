@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 #include "grid_map.hpp"
 #include "utils.hpp"
