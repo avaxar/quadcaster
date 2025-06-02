@@ -108,15 +108,15 @@ RayHit GridTree::cast(SDL_FPoint origin, float angle) const {
     float dx = std::sin(angle);
     float dy = std::cos(angle);
 
-    // Performs DDA for anything exceeding the left boundary
-    if (x < -1.0) {
-        float d = (-1.0 - x) / dx;
-        if (dx == 0.0 || d < 0.0) {
+    // Performs DDA for anything exceeding the top boundary
+    if (y > 1.0) {
+        float d = (1.0 - y) / dy;
+        if (dy == 0.0 || d < 0.0) {
             return RayHit{.hit = false, .locus = origin};
         }
 
-        x = -1.0;
-        y += d * dy;
+        x += d * dx;
+        y = 1.0;
     }
 
     // Performs DDA for anything exceeding the right boundary
@@ -141,15 +141,15 @@ RayHit GridTree::cast(SDL_FPoint origin, float angle) const {
         y = -1.0;
     }
 
-    // Performs DDA for anything exceeding the top boundary
-    if (y > 1.0) {
-        float d = (1.0 - y) / dy;
-        if (dy == 0.0 || d < 0.0) {
+    // Performs DDA for anything exceeding the left boundary
+    if (x < -1.0) {
+        float d = (-1.0 - x) / dx;
+        if (dx == 0.0 || d < 0.0) {
             return RayHit{.hit = false, .locus = origin};
         }
 
-        x += d * dx;
-        y = 1.0;
+        x = -1.0;
+        y += d * dy;
     }
 
     // If it's inside a leaf tree, confirms ray hit success
