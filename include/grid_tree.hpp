@@ -42,7 +42,7 @@ public:
     GridTree& getQuadrant(bool xPos, bool yPos);
     bool isLeaf() const;
 
-    void cull();
+    void prune();
     RayHit cast(SDL_FPoint origin, float angle) const;
     std::string graphviz() const;
 

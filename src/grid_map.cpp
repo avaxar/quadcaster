@@ -118,6 +118,6 @@ void GridMap::subtreeify(GridTree& tree, size_t x_start, size_t y_start, size_t 
     this->subtreeify(tree.getQuadrant(true, true), x_start + size / 2, y_start, size / 2);
     REMOVE_IF_NULL(true, true);
 
-    // Culls for homogeneous subgrids
-    tree.cull();
+    // Prunes homogeneous subgrids
+    tree.prune();
 }

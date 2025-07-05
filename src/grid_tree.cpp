@@ -73,7 +73,7 @@ bool GridTree::isLeaf() const {
     return true;
 }
 
-void GridTree::cull() {
+void GridTree::prune() {
     // Ensures that every quadrant exists and is a leaf
     for (int i = 0; i < 4; i++) {
         if (!this->quadrants[i] || !this->quadrants[i]->isLeaf()) {
@@ -90,7 +90,7 @@ void GridTree::cull() {
         }
     }
 
-    // Culls homogeneous quadrants
+    // Prunes homogeneous quadrants
     for (int i = 0b00; i <= 0b11; i++) {
         this->clearQuadrant(i & 0b01, i & 0b10);
     }
